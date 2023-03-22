@@ -1,0 +1,42 @@
+/*li {
+    display: inline;
+    margin: 10px;
+}
+
+ul {
+    background-color: #333;
+    margin-top: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+li:first-child{
+  font-size: 20px;  
+  padding-right: 100px;
+}
+*/
+
+.logo{
+    filter: invert(1);
+}
+
+body{
+    background-color: black;
+}
+
+h1, p{
+    color: white;
+}
+
+.carousel{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 400px;
+    height: 300px;
+}
