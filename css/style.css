@@ -11,6 +11,7 @@ body{
 header{
     background-color: grey;
     padding: 15px 15px;
+    display: flex;
 }
 
 nav{
@@ -21,6 +22,12 @@ nav{
     gap: 50px
 }
 
+ul {
+    list-style-type: none; /* Remove bullets */
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
 
 .logo{
     filter: invert(1);
