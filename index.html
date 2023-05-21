@@ -3,41 +3,32 @@
     <head>
         <meta charset="utf-8">
         <title>Classement des films</title>
-
-        <script src="get2.js"></script>
         <script src="get.js"></script>
         <link href="css/style.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope&family=Montserrat&display=swap" rel="stylesheet">
-
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Manrope&family=Montserrat&display=swap" rel="stylesheet">
     </head>
 
     <body>
-
       <header>
+        <a href="#" title="Accueil">
+          <img class="logo" src="img/logo.png" alt="Logo JustStreamIt" width="100" height="75">
+        </a>
         <nav>
-          <img class="logo" src="img/logo.png" width="100" height="75">
-          <div class="liens">
-            <a href="#">Accueil</a>
-            <a href="#">Catégories</a>
-          </div>
+          <ul>
+            <li>
+              <a href="#" title="Accueil">Accueil</a>
+            </li>
+            <li>
+              <a href="#" title="Catégories">Catégories</a>
+            </li>
+          </ul>
         </nav>
-
       </header>
-
       <main>
-        <section id="best-movie">
-          <div id="best-movie-infos">
-            <h1></h1>
-            <p></p>
-            <button id="myBtn" class="btn" hidden>Détails</button>
-          </div>
-        </section>
-
-        <!-- <section id="best-movies">
-          <button id="leftBtn" onclick="leftArrow()"><img src="img/left-arrow.png"/></button>
-          
+        <section id="best-movies">
+          <button id="leftBtn"><img src="img/left-arrow.png"/></button>
           <div class="caroussel">
             <img src="img/1.jpg"/>
             <img src="img/2.jpg"/>
@@ -47,9 +38,8 @@
             <img src="img/6.jpg" style="display:none"/>
             <img src="img/7.jpg" style="display:none"/>
           </div>
-          <button id="rightBtn" onclick="rightArrow()"><img src="img/right-arrow.png"/></button>
-        </section> -->
-      
+          <button id="rightBtn"><img src="img/right-arrow.png"/></button>
+        </section>
         <section>
           <!-- The Modal -->
           <div id="myModal" class="modal">
@@ -63,20 +53,10 @@
                 <div id="movie-picture">
                   <img src="" alt="" class="modalImg"/>
                 </div>
-                <ul id="infos-list">
-                  
-                </ul>
               </div>
             </div>
-
           </div>
         </section>
-
       </main>
-
-      <footer>
-          
-      </footer>
-
     </body>
 </html>
