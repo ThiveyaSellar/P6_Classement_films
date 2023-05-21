@@ -47,6 +47,8 @@ async function getBestMovie(){
     const res = await fetch(movies.results[0].url)
     const bestMovie = await res.json();
 
+    const bestMovieSection = document.createElement('section');
+    bestMovieSection.id = 'best-movie'
     const bestMovieSection = document.getElementById('best-movie');
     const bestMovieInfosDiv = document.getElementById('best-movie-infos');
 
@@ -423,7 +425,7 @@ getBestMovie();
 */
 
 const urlBestMovies = "http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score";
-blabla("best-movies", urlBestMovies,"Films les mieux notés",numberOfMoviesPerCategory,4);
+//blabla("best-movies", urlBestMovies,"Films les mieux notés",numberOfMoviesPerCategory,4);
 //getCategoryBestMovies("best-movies", urlBestMovies,"Films les mieux notés",numberOfMoviesPerCategory,4);
 /*
 const urlAnimationMovies = "http://127.0.0.1:8000/api/v1/titles/?genre=animation&sort_by=-imdb_score";
