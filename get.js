@@ -3,29 +3,29 @@
 
 
 function leftArrow(){
-    let content = document.getElementsByClassName('caroussel')[0];
+    let content = document.getElementsByClassName('carousel')[0];
     content.append(content.children.item(0));
-    // Récupérer les éléments du caroussel dans un tableau
-    let caroussel = document.getElementsByClassName('caroussel')[0];
-    let images = caroussel.getElementsByTagName('img');
+    // Récupérer les éléments du carousel dans un tableau
+    let carousel = document.getElementsByClassName('carousel')[0];
+    let images = carousel.getElementsByTagName('img');
     //console.log(images);
     update_carousel()
 }
 
 function rightArrow(){
-    let content = document.getElementsByClassName('caroussel')[0];
+    let content = document.getElementsByClassName('carousel')[0];
     console.log(content.children.item(content.children.length-1))
     content.prepend(content.children.item(content.children.length - 1));
-    // Récupérer les éléments du caroussel dans un tableau
-    let caroussel = document.getElementsByClassName('caroussel')[0];
-    let images = caroussel.getElementsByTagName('img');
+    // Récupérer les éléments du carousel dans un tableau
+    let carousel = document.getElementsByClassName('carousel')[0];
+    let images = carousel.getElementsByTagName('img');
     console.log(images);
     update_carousel()
 }
 
 function update_carousel(){
-    console.log(document.getElementsByClassName('caroussel'))
-    let movies_images = [...document.getElementsByClassName('caroussel')[0].children]
+    console.log(document.getElementsByClassName('carousel'))
+    let movies_images = [...document.getElementsByClassName('carousel')[0].children]
    
     movies_images.forEach((element, index)=>{
         if( index < 4){
@@ -47,8 +47,6 @@ async function getBestMovie(){
     const res = await fetch(movies.results[0].url)
     const bestMovie = await res.json();
 
-    const bestMovieSection = document.createElement('section');
-    bestMovieSection.id = 'best-movie'
     const bestMovieSection = document.getElementById('best-movie');
     const bestMovieInfosDiv = document.getElementById('best-movie-infos');
 
@@ -138,9 +136,9 @@ async function blabla(id, url, category, numberOfMovies, numberOfMoviesPerSlide)
     console.log(bestMovies);
 
     // Utiliser les données
-    // Créer la section qui va contenir le caroussel 
+    // Créer la section qui va contenir le carousel 
     const section = document.createElement('section');
-    // Ajouter l'id au caroussel
+    // Ajouter l'id au carousel
     section.id = id
     // Ajouter <button class="leftBtn" onclick="leftArrow()"><img src="img/left-arrow.png"/></button>
     const btnLeft = document.createElement('button');
@@ -151,7 +149,7 @@ async function blabla(id, url, category, numberOfMovies, numberOfMoviesPerSlide)
     btnLeft.appendChild(leftIcon);
     section.appendChild(btnLeft)
     const div = document.createElement('div')
-    div.className = "caroussel"
+    div.className = "carousel"
     for(let i=0;i<7; i++){
         console.log(i)
         const image = document.createElement('img')
@@ -437,7 +435,7 @@ getCategoryBestMovies("category-thriller", urlThrillerMovies, "Thriller", number
 */
 //const movieInfos = getMovieDetails("1508669");
 // Rendre générique et non qu'à 7 films
-// Scroller les caroussels
+// Scroller les carousels
 // Fenêtres modales avec toutes les informations
 
 

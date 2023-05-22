@@ -147,18 +147,18 @@ a{
 }
 
 
-.carrousel{
+.carousel{
     display: flex;
     flex-direction: row;
 }
 
-.carrousel img{
+.carousel img{
     width: 150px;
     height: 100px;
 }
 
 /*
-.carrousel{
+.carousel{
     padding-left: 100px;
     padding-right: 100px;
     display: grid;
