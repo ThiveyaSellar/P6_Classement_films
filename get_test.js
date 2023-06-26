@@ -1,47 +1,52 @@
+const config = {
+    numberOfMovies : 7,
+    numberOfMoviesPerSlide : 4
+}
+
+
 // --------------------------------------------------------------
 
 	// The best movie
 
 // --------------------------------------------------------------
-/*
-async function getBestMovie(){
-
-    // Récupérer les données depuis l'API pour le meilleur film
-    const response = await fetch("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score");
-    const movies = await response.json();
-    const res = await fetch(movies.results[0].url)
-    const bestMovie = await res.json();
-
-    // Créer la section pour le carrousel
+function createBestMovieSection(){
     const bestMovieSection = document.createElement('section');
     bestMovieSection.id = 'best-movie';
-    // Créer une div 
+    return bestMovieSection;   
+}
+
+function createBestMovieInfosDiv(){
     const bestMovieInfosDiv = document.createElement('div');
     bestMovieInfosDiv.id = 'best-movie-infos';
-    // Créer le titre
+    return bestMovieInfosDiv;
+}
+
+function createTitle(title){
     const titleElement = document.createElement('h1');
-    titleElement.innerText = bestMovie.title
-    bestMovieInfosDiv.appendChild(titleElement);
+    titleElement.innerText = title
+    return titleElement;
+}
+
+function createText(text){
     const textElement = document.createElement('p');
+    textElement.innerText = text;
+    return text;
+}
 
-    const moviePage = await fetch(bestMovie.url);
-    const movieDetails = await moviePage.json();
-    textElement.innerText = movieDetails.long_description;
-    bestMovieInfosDiv.appendChild(textElement);
+function createButton(){
     const buttonElement = document.createElement('button');
-    buttonElement.id = "myBtn"
-    bestMovieInfosDiv.appendChild(buttonElement);
+    buttonElement.id = "myBtn";
+    return buttonElement;
+}
 
+function createImage(url, title){
     const imageElement = document.createElement('img');
-    imageElement.src = bestMovie.image_url
-    imageElement.alt = bestMovie.title
-    bestMovieInfosDiv.appendChild(imageElement);
+    imageElement.src = image_url
+    imageElement.alt = title
+    return imageElement;
+}
 
-    // Ajouter la div à la section
-    bestMovieSection.appendChild(bestMovieInfosDiv);
-    // Ajouter la section au document
-    document.body.appendChild(bestMovieSection);
-
+function setModal(movieDetails){
     // Get the modal
     var modal = document.getElementById("myModal");
 
@@ -68,51 +73,36 @@ async function getBestMovie(){
         modal.style.display = "none";
     }
     }
-
-}
-*/
-// --------------------------------------------------------------
-
-	// Categories
-
-// --------------------------------------------------------------
-async function fetchData(url){
-	const response = await fetch(url);
-    const movies = await response.json();
-	return movies
 }
 
-function createCarousel(movies,category){
-	//Créer la section
-	const carouselSection = document.createElement('section');
-	carouselSection.id = category
-	const leftBtn = document.createElement('button');
-    leftBtn.classList.add('leftBtn');
-    // Créer l'image de la flèche de gauche
-    const leftArrowImg = document.createElement('img');
-    leftArrowImg.src = "img/left-arrow.png";
-    leftArrowImg.alt = "Left arrow";
-    // Mettre l'image sur le bouton
-    leftBtn.innerHTML = leftArrowImg;
-    // Ajouter le bouton à la section
-    carouselSection.appendChild(leftBtn)
-    // Créer l'élément div
-    const carouselDiv = document.createElement('div');
-    carouselDiv.classList.add('carousel');
-    // Ajouter les images à la div du carousel
-    for(let i=0;i<numberOfMovies; i++){
-        const image = document.createElement('img')
-        image.src = movies[i].image_url
-        image.alt = movies[i].title
-        if (i >= numberOfMoviesPerSlide) {
-            image.style.display = "none"
-        }
-        carouselDiv.appendChild(image)
-    }
+async function getBestMovie(){
+    const movies = await fetchData("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score")
+    const bestMovie = await fetchData(movies.results[0].url)
 
-    // Ajouter la section au document
-    document.body.appendChild(carouselSection)
+    const bestMovieSection = createBestMovieSection();
+    const bestMovieInfosDiv = createBestMovieInfosDiv();
+
+    const title = createTitle(bestMovie.title);
+    bestMovieInfosDiv.appendChild(title);
+
+    const movieDetails = await fetchData(bestMovie.url);
+
+    const movieDescription = createText(movieDetails.long_description)
+    bestMovieInfosDiv.appendChild(movieDescription);
+
+    const moreDetailsBtn = createButton(); 
+    bestMovieInfosDiv.appendChild(moreDetailsBtn);
+
+    const image = createImage(bestMovie.url, bestMovie.title)
+    bestMovieInfosDiv.appendChild(image);
+
+    bestMovieSection.appendChild(bestMovieInfosDiv);
+    document.body.appendChild(bestMovieSection);
+
+    setModal(movieDetails)
 }
+
+
 
 function getCategoryBestMovies(){
 	const movies = fetchData(url)
@@ -184,11 +174,6 @@ function rightArrow(section){
 // --------------------------------------------------------------
 //getBestMovie()
 
-const config = {
-	numberOfMovies = 7,
-	numberOfMoviesPerSlide = 4
-}
-
 /*
 // Récupérer l'id des boutons des carroussels cliqués uniquement
 // Passer en paramètre des fonctions 
@@ -205,3 +190,81 @@ rightBtn.addEventListener('click', function(){
 })
 
 */
+
+
+// --------------------------------------------------------------
+
+    // Categories
+
+// --------------------------------------------------------------
+
+async function fetchData(url){
+    const response = await fetch(url);
+    const movies = await response.json();
+    return movies
+}
+
+function getCarouselSection(category) {
+    const carouselSection = document.createElement('section');
+    carouselSection.id = category
+    return carouselSection;
+}
+
+function getArrow(direction) {
+    const btn = document.createElement('button');
+    btn.classList.add(direction + 'Btn');
+    // Créer l'image de la flèche de gauche
+    const arrowImg = document.createElement('img');
+    arrowImg.src = "img/"+direction+"-arrow.png";
+    arrowImg.alt = direction + " arrow";
+
+    // Mettre l'image sur le bouton
+    btn.innerHTML = arrowImg;
+    return btn;
+}
+
+function createCarouselDiv() {
+    const carouselDiv = document.createElement('div');
+    carouselDiv.classList.add('carousel');
+    return carouselDiv;
+}
+
+function manageCarouselImages(numberOfMovies, carouselDiv){
+    // Ajouter les images à la div du carousel
+    for(let i=0;i<numberOfMovies; i++){
+        const image = createCarouselImg(movies[i]);
+        if (i >= numberOfMoviesPerSlide) {
+            image.style.display = "none"
+        }
+        carouselDiv.appendChild(image)
+    }
+}
+
+function createCarousel(movies, category){
+    const carouselSection = getCarouselSection(category);
+
+    const leftBtn = getArrow("left");
+    const rightBtn = getArrow("right");
+    const carouselDiv = createCarouselDiv();
+
+    carouselSection.appendChild(leftBtn)
+    carouselSection.appendChild(rightBtn)
+    carouselSection.appendChild(carouselDiv);
+
+    manageCarouselImages(numberOfMovies, carouselDiv);
+
+    // Ajouter la section au document
+    document.body.appendChild(carouselSection)
+}
+
+// --------------------------------------------------------------
+
+    // Main
+
+// --------------------------------------------------------------
+
+function main(config) {
+    getBestMovie()
+}
+
+main(config)
