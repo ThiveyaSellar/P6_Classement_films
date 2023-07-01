@@ -30,7 +30,7 @@ function createTitle(title){
 function createText(text){
     const textElement = document.createElement('p');
     textElement.innerText = text;
-    return text;
+    return textElement;
 }
 
 function createButton(){
@@ -41,7 +41,7 @@ function createButton(){
 
 function createImage(url, title){
     const imageElement = document.createElement('img');
-    imageElement.src = image_url
+    imageElement.src = url
     imageElement.alt = title
     return imageElement;
 }
@@ -93,7 +93,7 @@ async function getBestMovie(){
     const moreDetailsBtn = createButton(); 
     bestMovieInfosDiv.appendChild(moreDetailsBtn);
 
-    const image = createImage(bestMovie.url, bestMovie.title)
+    const image = createImage(bestMovie.image_url, bestMovie.title)
     bestMovieInfosDiv.appendChild(image);
 
     bestMovieSection.appendChild(bestMovieInfosDiv);
@@ -229,11 +229,18 @@ function createCarouselDiv() {
     return carouselDiv;
 }
 
-function manageCarouselImages(numberOfMovies, carouselDiv){
+function test(element){
+    console.log("---------------------------")
+    console.log(element)
+    console.log("---------------------------")
+}
+
+function manageCarouselImages(movies, numberOfMovies, carouselDiv){
     // Ajouter les images à la div du carousel
     for(let i=0;i<numberOfMovies; i++){
+        test(movies)
         const image = createCarouselImg(movies[i]);
-        if (i >= numberOfMoviesPerSlide) {
+        if (i >= config.numberOfMoviesPerSlide) {
             image.style.display = "none"
         }
         carouselDiv.appendChild(image)
@@ -251,10 +258,24 @@ function createCarousel(movies, category){
     carouselSection.appendChild(rightBtn)
     carouselSection.appendChild(carouselDiv);
 
-    manageCarouselImages(numberOfMovies, carouselDiv);
+    manageCarouselImages(movies, config["numberOfMovies"], carouselDiv);
 
     // Ajouter la section au document
     document.body.appendChild(carouselSection)
+}
+
+function createCarouselImg(movie) {
+    const a = movie.image_url
+    const image = document.createElement('img')
+    image.alt = movie.title
+    image.src = a
+    
+    return image;
+}
+
+async function fetchAndCreateCarousel(url, category){
+    const movies = await fetchData(url)
+    createCarousel(movies.results, category) 
 }
 
 // --------------------------------------------------------------
@@ -264,7 +285,15 @@ function createCarousel(movies, category){
 // --------------------------------------------------------------
 
 function main(config) {
-    getBestMovie()
+    // Première section : afficher le meilleur film
+    //getBestMovie()
+
+    // Deuxième section : afficher les caroussels selon les catégories
+    // Fetcher les n films d'une catégorie à partir d'un url
+    const url = `http://127.0.0.1:8000/api/v1/titles/?page_size=${config.numberOfMovies}&sort_by=-imdb_score`;    
+    const bestMovies = await fetchData(url)
+    createCarousel(bestMovies.results, "best-movies") 
 }
 
 main(config)
+
