@@ -3,6 +3,11 @@ const config = {
     numberOfMoviesPerSlide : 4
 }
 
+function test(element){
+    console.log("---------------------------")
+    console.log(element)
+    console.log("---------------------------")
+}
 
 // --------------------------------------------------------------
 
@@ -100,38 +105,7 @@ async function getBestMovie(){
     document.body.appendChild(bestMovieSection);
 
     setModal(movieDetails)
-}
-
-
-
-function getCategoryBestMovies(){
-	const movies = fetchData(url)
-    // Liste des meilleurs films de la catégorie
-    let bestMovies = [];
-    let i = 0;
-    while (numberOfMovies>0 && i < movies.results.length){
-    	const movie = fetchData(movies.results[i].url)
-        bestMovies.push(movie);
-        i++;
-        numberOfMovies--;
-    }
-    // Lien pour la page suivante
-    const nextPageMovies = fetchData(movies.next)
-    i = 0;
-    while (numberOfMovies>0 && i < nextPageMovies.results.length){
-        const movie = fetchData(movies.results[i].url)
-        bestMovies.push(movie);
-        i++;
-        numberOfMovies--;
-    }
-    console.log("Films");    
-    console.log(bestMovies);
-    createCarousel(bestMovies);
-}
-
-
-
-    
+}    
 
 // --------------------------------------------------------------
 
@@ -139,11 +113,11 @@ function getCategoryBestMovies(){
 
 // --------------------------------------------------------------
 
-function update_carousel(){
-    let movies_images = [...document.getElementsByClassName('carousel')[0].children]
+function update_carousel(section){
+    let movies_images = [...section.getElementsByClassName('carousel')[0].children]
    
     movies_images.forEach((element, index)=>{
-        if( index < 4){
+        if( index < config.numberOfMoviesPerSlide){
             element.style.display = 'block'
         }else{
             element.style.display = 'none'
@@ -151,15 +125,15 @@ function update_carousel(){
     })
 }
 
-function leftArrow(section){
+function rightArrow(section){
     let carousel = section.getElementsByClassName('carousel')[0];
     carousel.append(carousel.children.item(0));
     // Récupérer les éléments du carousel dans un tableau
     let images = carousel.getElementsByTagName('img');
-    update_carousel()
+    update_carousel(section)
 }
 
-function rightArrow(section){
+function leftArrow(section){
     let carousel = section.getElementsByClassName('carousel')[0];
     carousel.prepend(carousel.children.item(carousel.children.length - 1));
     // Récupérer les éléments du caroussel dans un tableau
@@ -172,24 +146,11 @@ function rightArrow(section){
 	// Main
 
 // --------------------------------------------------------------
-//getBestMovie()
 
-/*
+
 // Récupérer l'id des boutons des carroussels cliqués uniquement
-// Passer en paramètre des fonctions 
-const carouselSection = document.getElementById('best-movies');
-const leftBtn = carouselSection.getElementsByClassName('leftBtn')[0];
-const rightBtn = carouselSection.getElementsByClassName('rightBtn')[0];
 
-leftBtn.addEventListener('click', function(){
-	leftArrow(carouselSection);
-});
 
-rightBtn.addEventListener('click', function(){
-	rightArrow(carouselSection);
-})
-
-*/
 
 
 // --------------------------------------------------------------
@@ -204,9 +165,13 @@ async function fetchData(url){
     return movies
 }
 
-function getCarouselSection(category) {
+
+function createCarouselSection(category) {
     const carouselSection = document.createElement('section');
     carouselSection.id = category
+    carouselSection.classList.add('carousel-section');
+    const title = createTitle(category)
+    carouselSection.appendChild(title)
     return carouselSection;
 }
 
@@ -218,8 +183,8 @@ function getArrow(direction) {
     arrowImg.src = "img/"+direction+"-arrow.png";
     arrowImg.alt = direction + " arrow";
 
-    // Mettre l'image sur le bouton
-    btn.innerHTML = arrowImg;
+    btn.innerHTML = arrowImg.outerHTML;
+
     return btn;
 }
 
@@ -229,16 +194,9 @@ function createCarouselDiv() {
     return carouselDiv;
 }
 
-function test(element){
-    console.log("---------------------------")
-    console.log(element)
-    console.log("---------------------------")
-}
-
 function manageCarouselImages(movies, numberOfMovies, carouselDiv){
     // Ajouter les images à la div du carousel
     for(let i=0;i<numberOfMovies; i++){
-        test(movies)
         const image = createCarouselImg(movies[i]);
         if (i >= config.numberOfMoviesPerSlide) {
             image.style.display = "none"
@@ -248,27 +206,37 @@ function manageCarouselImages(movies, numberOfMovies, carouselDiv){
 }
 
 function createCarousel(movies, category){
-    const carouselSection = getCarouselSection(category);
+    const mainElement = document.getElementsByTagName("main")[0];
+    const carouselSection = createCarouselSection(category);
 
     const leftBtn = getArrow("left");
     const rightBtn = getArrow("right");
     const carouselDiv = createCarouselDiv();
 
-    carouselSection.appendChild(leftBtn)
-    carouselSection.appendChild(rightBtn)
+    leftBtn.addEventListener('click', function(){
+        leftArrow(carouselSection);
+    });
+
+    rightBtn.addEventListener('click', function(){
+        rightArrow(carouselSection);
+    });
+
+    carouselSection.appendChild(leftBtn);
     carouselSection.appendChild(carouselDiv);
+    carouselSection.appendChild(rightBtn);
 
     manageCarouselImages(movies, config["numberOfMovies"], carouselDiv);
 
     // Ajouter la section au document
-    document.body.appendChild(carouselSection)
+    // document.body.appendChild(carouselSection)
+    mainElement.appendChild(carouselSection)
 }
 
 function createCarouselImg(movie) {
-    const a = movie.image_url
+    const imageUrl = movie.image_url
     const image = document.createElement('img')
     image.alt = movie.title
-    image.src = a
+    image.src = imageUrl
     
     return image;
 }
@@ -289,10 +257,49 @@ function main(config) {
     //getBestMovie()
 
     // Deuxième section : afficher les caroussels selon les catégories
+    
+    // Carousel en html pur 
+    // Récupérer le carousel
+    // Associer les boutons de ce carousel
+    // Ajouter les événements aux boutons
+    const carouselSection = document.getElementById('html-pur');
+    const leftBtn = carouselSection.getElementsByClassName('leftBtn')[0];
+    const rightBtn = carouselSection.getElementsByClassName('rightBtn')[0];
+
+    leftBtn.addEventListener('click', function(){
+        leftArrow(carouselSection);
+    });
+
+    rightBtn.addEventListener('click', function(){
+        rightArrow(carouselSection);
+    });
+
     // Fetcher les n films d'une catégorie à partir d'un url
     const url = `http://127.0.0.1:8000/api/v1/titles/?page_size=${config.numberOfMovies}&sort_by=-imdb_score`;    
-    const bestMovies = await fetchData(url)
-    createCarousel(bestMovies.results, "best-movies") 
+    const urlHistory = `http://127.0.0.1:8000/api/v1/titles/?genre=history&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;    
+    const urlCrime = `http://127.0.0.1:8000/api/v1/titles/?genre=crime&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
+    const urlThriller = `http://127.0.0.1:8000/api/v1/titles/?genre=thriller&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
+
+    fetchAndCreateCarousel(url, "best-movies")
+    .then(() => {
+    return fetchAndCreateCarousel(urlHistory, "history");
+    })
+    .then(() => {
+    return fetchAndCreateCarousel(urlCrime, "crime");
+    })
+    .then(() => {
+    return fetchAndCreateCarousel(urlThriller, "thriller");
+    })
+    .catch((error) => {
+    console.error(error);
+    });
+
+    // Créer le carousel
+    // Récupérer
+    
+
+
+
 }
 
 main(config)

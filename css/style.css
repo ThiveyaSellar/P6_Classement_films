@@ -173,15 +173,31 @@ button img{
     height:10px;
 }
 
-#best-movies button{
+/*
+#html-pur button{
     height:20px;
 }
 
-#best-movies{
+#html-pur{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+*/
+
+.carousel-section button{
+    height:20px;
+}
+
+.carousel {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
+.carousel img{
+    height:200px;
+}
 
