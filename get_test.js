@@ -166,12 +166,12 @@ async function fetchData(url){
 }
 
 
-function createCarouselSection(category) {
+function createCarouselSection(sectionId, category) {
     const carouselSection = document.createElement('section');
-    carouselSection.id = category
-    carouselSection.classList.add('carousel-section');
-    const title = createTitle(category)
-    carouselSection.appendChild(title)
+    carouselSection.id = sectionId;
+    //carouselSection.classList.add('carousel-section');
+    const title = createTitle(category);
+    carouselSection.appendChild(title);
     return carouselSection;
 }
 
@@ -205,13 +205,17 @@ function manageCarouselImages(movies, numberOfMovies, carouselDiv){
     }
 }
 
-function createCarousel(movies, category){
+function createCarousel(movies, sectionId, category){
     const mainElement = document.getElementsByTagName("main")[0];
-    const carouselSection = createCarouselSection(category);
+    const carouselSection = createCarouselSection(sectionId, category);
 
     const leftBtn = getArrow("left");
     const rightBtn = getArrow("right");
     const carouselDiv = createCarouselDiv();
+
+    const carouselElementsDiv = document.createElement('div');
+    carouselElementsDiv.classList.add('carousel-section');
+    
 
     leftBtn.addEventListener('click', function(){
         leftArrow(carouselSection);
@@ -221,9 +225,11 @@ function createCarousel(movies, category){
         rightArrow(carouselSection);
     });
 
-    carouselSection.appendChild(leftBtn);
-    carouselSection.appendChild(carouselDiv);
-    carouselSection.appendChild(rightBtn);
+    carouselElementsDiv.appendChild(leftBtn);
+    carouselElementsDiv.appendChild(carouselDiv);
+    carouselElementsDiv.appendChild(rightBtn);
+
+    carouselSection.appendChild(carouselElementsDiv)
 
     manageCarouselImages(movies, config["numberOfMovies"], carouselDiv);
 
@@ -241,9 +247,9 @@ function createCarouselImg(movie) {
     return image;
 }
 
-async function fetchAndCreateCarousel(url, category){
+async function fetchAndCreateCarousel(url, sectionId, category){
     const movies = await fetchData(url)
-    createCarousel(movies.results, category) 
+    createCarousel(movies.results, sectionId, category) 
 }
 
 // --------------------------------------------------------------
@@ -254,14 +260,12 @@ async function fetchAndCreateCarousel(url, category){
 
 function main(config) {
     // Première section : afficher le meilleur film
-    //getBestMovie()
+    getBestMovie()
 
     // Deuxième section : afficher les caroussels selon les catégories
-    
-    // Carousel en html pur 
-    // Récupérer le carousel
-    // Associer les boutons de ce carousel
-    // Ajouter les événements aux boutons
+
+    // HTML pur
+    /*
     const carouselSection = document.getElementById('html-pur');
     const leftBtn = carouselSection.getElementsByClassName('leftBtn')[0];
     const rightBtn = carouselSection.getElementsByClassName('rightBtn')[0];
@@ -273,32 +277,29 @@ function main(config) {
     rightBtn.addEventListener('click', function(){
         rightArrow(carouselSection);
     });
+    */
 
-    // Fetcher les n films d'une catégorie à partir d'un url
-    const url = `http://127.0.0.1:8000/api/v1/titles/?page_size=${config.numberOfMovies}&sort_by=-imdb_score`;    
-    const urlHistory = `http://127.0.0.1:8000/api/v1/titles/?genre=history&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;    
-    const urlCrime = `http://127.0.0.1:8000/api/v1/titles/?genre=crime&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
-    const urlThriller = `http://127.0.0.1:8000/api/v1/titles/?genre=thriller&page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
+    /*
+    const baseUrl = `http://127.0.0.1:8000/api/v1/titles/?page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
+    const url = baseUrl;    
+    const urlHistory = `${baseUrl}&genre=history`;    
+    const urlCrime = `${baseUrl}&genre=crime`;
+    const urlThriller = `${baseUrl}&genre=thriller`;
 
-    fetchAndCreateCarousel(url, "best-movies")
+    fetchAndCreateCarousel(url, "best-movies", "Meilleurs films")
     .then(() => {
-    return fetchAndCreateCarousel(urlHistory, "history");
+    return fetchAndCreateCarousel(urlHistory, "history", "Historique");
     })
     .then(() => {
-    return fetchAndCreateCarousel(urlCrime, "crime");
+    return fetchAndCreateCarousel(urlCrime, "crime", "Crime");
     })
     .then(() => {
-    return fetchAndCreateCarousel(urlThriller, "thriller");
+    return fetchAndCreateCarousel(urlThriller, "thriller", "Thriller");
     })
     .catch((error) => {
     console.error(error);
     });
-
-    // Créer le carousel
-    // Récupérer
-    
-
-
+    */
 
 }
 

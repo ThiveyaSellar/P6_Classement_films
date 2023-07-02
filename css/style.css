@@ -173,24 +173,13 @@ button img{
     height:10px;
 }
 
-/*
-#html-pur button{
-    height:20px;
-}
-
-#html-pur{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-*/
-
 .carousel-section button{
     height:20px;
+    margin: 20px;
+    border:none;
 }
 
-.carousel {
+.carousel-section {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -199,5 +188,9 @@ button img{
 
 .carousel img{
     height:200px;
+}
+
+section h1 {
+    margin : 20px;
 }
 
