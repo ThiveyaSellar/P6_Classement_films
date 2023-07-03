@@ -188,9 +188,14 @@ button img{
 
 .carousel img{
     height:200px;
+    padding:20px;
 }
 
-section h1 {
-    margin : 20px;
+.category {
+    margin-left : 200px;
+    margin-bottom: 50px;
 }
 
+#myBtn {
+    width :200px;
+}
