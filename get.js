@@ -46,128 +46,6 @@ function createImage(url, title){
     return imageElement;
 }
 
-
-function showList(movieElements, title, list){
-    const elements = document.createElement('li');
-    const elementList = document.createElement('ul');
-    for(let element of movieElements){
-        const elementElement = document.createElement('li');
-        elementElement.innerText = element;
-        elementList.appendChild(elementElement);
-    }
-    elements.innerText = title;
-    elements.appendChild(elementList);
-    list.appendChild(elements);
-}
-
-async function showMovieDetails(movie){
-    
-    // Titre
-    const title = document.getElementById("modalTitle");
-    title.innerText = movie.title
-
-    // Image
-    const img = document.getElementsByClassName('modalImg')[0];
-    img.src = movie.image_url;
-    img.alt = movie.title;
-    
-    // Liste
-    let list = document.getElementById("infos-list");
-
-    list.innerHTML = "";
-
-    showList(movie.genres,"Genres :", list);
-
-    let date = document.createElement('li');
-    date.innerText = `Date de sortie : ${movie.year}`;
-    list.appendChild(date);
-
-    let rated = document.createElement('li');
-    rated.innerText = `Rated : ${movie.rated}`;
-    list.appendChild(rated);
-
-    let imdbScore = document.createElement('li');
-    imdbScore.innerText = `Score imdb : ${movie.imdb_score}`;
-    list.appendChild(imdbScore);
-
-    /*
-    const director = document.createElement('li');
-    director.innerText = `Réalisateur : ${movie.directors}`;
-    list.appendChild(director);
-    */
-    showList(movie.directors, movie.directors.length == 1 ? "Réalisateur :" : "Réalisateurs : ", list)
-    /*
-    const actors = document.createElement('li');
-    const actorsList = document.createElement('ul');
-    for(let actor of movie.actors){
-        const actorElement = document.createElement('li');
-        actorElement.innerText = actor;
-        actorsList.appendChild(actorElement);
-    }
-    actors.innerText = "Acteurs : "
-    actors.appendChild(actorsList);
-    list.appendChild(actors);
-    */
-    
-    showList(movie.actors,movie.actors.length == 1 ? "Acteur :" : "Acteurs : ", list);
-    const duration = document.createElement('li');
-    duration.innerText = `Durée : ${movie.duration}`;
-    list.appendChild(duration);
-
-    /*
-    const country = document.createElement('li');
-    country.innerText = `Pays : ${movie.countries}`;
-    list.appendChild(country);
-    */
-
-    showList(movie.countries, "Pays : ", list);
-    const worldwideGrossIncome = document.createElement('li');
-    worldwideGrossIncome.innerText = `Box-office : ${movie.worldwide_gross_income}`;
-    list.appendChild(worldwideGrossIncome);
-
-    const description = document.createElement('li');
-    description.innerText = `Résumé : ${movie.long_description}`;
-    list.appendChild(description);
-
-    // Récupération de l'élément dans lequel ajouter les éléments créer
-    const imageRow = document.getElementById("movie-picture");
-    imageRow.appendChild(img);
-    const detailsRow = document.getElementsByClassName("modal-body")[0];
-    //detailsRow.innerHTML="" //Ici
-    detailsRow.appendChild(list);
-    // Ajouter les éléments créer
-    
-}
-
-function setModal(movieDetails){
-    // Get the modal
-    var modal = document.getElementById("myModal");
-
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks on the button, open the modal
-    btn.onclick = function() {
-    showMovieDetails(movieDetails);
-    modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-    modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-    }
-}
-
 async function getBestMovie(){
     const movies = await fetchData("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score")
     const bestMovie = await fetchData(movies.results[0].url)
@@ -185,7 +63,8 @@ async function getBestMovie(){
 
     const moreDetailsBtn = createButton("Plus d'informations"); 
     moreDetailsBtn.addEventListener("click",function(){
-        setModal(movieDetails)
+        const movieId = bestMovie.id
+        setModal(movieId)
     })
     bestMovieInfosDiv.appendChild(moreDetailsBtn);
 
@@ -205,14 +84,14 @@ async function getBestMovie(){
 
 // --------------------------------------------------------------
 
-function update_carousel(section){
+function update_carousel(section){   
     let movies_images = [...section.getElementsByClassName('carousel')[0].children]
    
     movies_images.forEach((element, index)=>{
         if( index < config.numberOfMoviesPerSlide){
             element.style.display = 'block'
         }else{
-            element.style.display = 'none'
+            element.style.display = 'none' 
         }
     })
 }
@@ -225,12 +104,12 @@ function rightArrow(section){
     update_carousel(section)
 }
 
-function leftArrow(section){
+function leftArrow(section){  
     let carousel = section.getElementsByClassName('carousel')[0];
     carousel.prepend(carousel.children.item(carousel.children.length - 1));
     // Récupérer les éléments du caroussel dans un tableau
     let images = carousel.getElementsByTagName('img');
-    update_carousel()
+    update_carousel(section)
 }
 
 
@@ -387,6 +266,204 @@ function main(config) {
     
 
 }
+
+
+
+
+
+
+function showList(movieElements, title, list){
+    const elements = document.createElement('li');
+    const elementList = document.createElement('ul');
+    for(let element of movieElements){
+        const elementElement = document.createElement('li');
+        elementElement.innerText = element;
+        elementList.appendChild(elementElement);
+    }
+    elements.innerText = title;
+    elements.appendChild(elementList);
+    list.appendChild(elements);
+}
+
+function setModalHeaderMovieTitle(title){
+    const modalTitle = document.getElementById("modalTitle");
+    modalTitle.innerText = title
+}
+
+function createModalMoviePicture(source, title){
+    //const modalImage = document.getElementsByClassName('modalImg')[0];
+    const modalImage = document.createElement('img');
+    modalImage.src = source;
+    modalImage.alt = title;
+    document.getElementById("movie-picture").appendChild(modalImage)
+}
+
+function createListItem(itemName, itemContent){
+    const item = document.createElement('li');
+    item.innerText = `${itemName} : ${itemContent}.`;
+    return item;
+}
+
+function setModalMovieList(modalBody,movieDetails){
+
+    const ulElement = document.createElement('ul');
+
+    // Si données multiples écrire sur une ligne
+
+    const items = [
+        ["Titre", movieDetails.title],
+        ["Genres", movieDetails.genres],
+        ["Date de sortie", movieDetails.year],
+        ["Rated", movieDetails.rated],
+        ["Score Imdb", movieDetails.imdb_score],
+        ["Réalisateur", movieDetails.directors],
+        ["Acteurs", movieDetails.actors],
+        ["Durée", movieDetails.duration],
+        ["Pays d'origine", movieDetails.countries],
+        ["Box-office", movieDetails.worldwide_gross_income],
+        ["Résumé", movieDetails.long_description]
+    ]
+
+    for(let i=0; i < items.length; i++){
+        let itemName = items[i][0];
+        let itemContent = items[i][1];
+
+        if(typeof(itemContent) === "object" && itemContent !== null){
+            itemContent = itemContent.join(', ')
+        }
+
+        var item = createListItem(itemName, itemContent)
+        ulElement.appendChild(item)
+    }
+
+    modalBody.appendChild(ulElement);
+}
+
+async function setMovieDetails(modalBody, movieDetails){
+    setModalHeaderMovieTitle(movieDetails.title)
+    createModalMoviePicture(movieDetails.image_url, movieDetails.title)
+    setModalMovieList(modalBody, movieDetails)
+}
+
+async function showMovieDetails(movie){
+    
+    // Titre
+    
+
+    // Image
+    
+    
+    // Liste
+    let list = document.getElementById("infos-list");
+
+    list.innerHTML = "";
+
+    showList(movie.genres,"Genres :", list);
+
+    let date = document.createElement('li');
+    date.innerText = `Date de sortie : ${movie.year}`;
+    list.appendChild(date);
+
+    let rated = document.createElement('li');
+    rated.innerText = `Rated : ${movie.rated}`;
+    list.appendChild(rated);
+
+    let imdbScore = document.createElement('li');
+    imdbScore.innerText = `Score imdb : ${movie.imdb_score}`;
+    list.appendChild(imdbScore);
+
+    /*
+    const director = document.createElement('li');
+    director.innerText = `Réalisateur : ${movie.directors}`;
+    list.appendChild(director);
+    */
+    showList(movie.directors, movie.directors.length == 1 ? "Réalisateur :" : "Réalisateurs : ", list)
+    /*
+    const actors = document.createElement('li');
+    const actorsList = document.createElement('ul');
+    for(let actor of movie.actors){
+        const actorElement = document.createElement('li');
+        actorElement.innerText = actor;
+        actorsList.appendChild(actorElement);
+    }
+    actors.innerText = "Acteurs : "
+    actors.appendChild(actorsList);
+    list.appendChild(actors);
+    */
+    
+    showList(movie.actors,movie.actors.length == 1 ? "Acteur :" : "Acteurs : ", list);
+    const duration = document.createElement('li');
+    duration.innerText = `Durée : ${movie.duration}`;
+    list.appendChild(duration);
+
+    /*
+    const country = document.createElement('li');
+    country.innerText = `Pays : ${movie.countries}`;
+    list.appendChild(country);
+    */
+
+    showList(movie.countries, "Pays : ", list);
+    const worldwideGrossIncome = document.createElement('li');
+    worldwideGrossIncome.innerText = `Box-office : ${movie.worldwide_gross_income}`;
+    list.appendChild(worldwideGrossIncome);
+
+    const description = document.createElement('li');
+    description.innerText = `Résumé : ${movie.long_description}`;
+    list.appendChild(description);
+
+    // Récupération de l'élément dans lequel ajouter les éléments créer
+    const imageRow = document.getElementById("movie-picture");
+    imageRow.appendChild(img);
+    const detailsRow = document.getElementsByClassName("modal-body")[0];
+    //detailsRow.innerHTML="" //Ici
+    detailsRow.appendChild(list);
+    // Ajouter les éléments créer
+    
+}
+
+async function setModal(movieId){
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    var modalBody = modal.getElementsByClassName("modal-body")[0]
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // Get movie details 
+    const url = `http://127.0.0.1:8000/api/v1/titles/${movieId}`
+    const movieDetails = await fetchData(url)
+
+    // Set movie details
+    setMovieDetails(modalBody, movieDetails)
+
+    // When the user clicks on the button, open the modal
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    btn.addEventListener("click", openModal);
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
+
+
+
+
+
 
 main(config)
 

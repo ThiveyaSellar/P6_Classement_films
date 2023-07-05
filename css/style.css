@@ -22,10 +22,17 @@ nav{
     gap: 50px
 }
 
-ul {
-    list-style-type: none; /* Remove bullets */
+header ul {
+    list-style-type: none;  Remove bullets */
     display: flex;
     flex-direction: row;
+    gap: 25px;
+}
+
+ul {
+    /*list-style-type: none;  Remove bullets */
+    display: flex;
+    flex-direction: column;
     gap: 25px;
 }
 
@@ -198,4 +205,11 @@ button img{
 
 #myBtn {
     width :200px;
+}
+
+/*_______________________Test________________*/
+
+#movie-picture img {
+    height: 200px;
+    width:300px;
 }
