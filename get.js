@@ -265,27 +265,9 @@ function main(config) {
     .catch((error) => {
     console.error(error);
     });
-    
 
 }
 
-
-
-
-
-
-function showList(movieElements, title, list){
-    const elements = document.createElement('li');
-    const elementList = document.createElement('ul');
-    for(let element of movieElements){
-        const elementElement = document.createElement('li');
-        elementElement.innerText = element;
-        elementList.appendChild(elementElement);
-    }
-    elements.innerText = title;
-    elements.appendChild(elementList);
-    list.appendChild(elements);
-}
 
 function setModalHeaderMovieTitle(title){
     const modalTitle = document.getElementById("modalTitle");
@@ -353,82 +335,6 @@ async function setMovieDetails(modalBody, movieDetails){
     const moviePicture = createModalMoviePicture(movieDetails.image_url, movieDetails.title)
     modalBody.appendChild(moviePicture)
     setModalMovieList(modalBody, movieDetails)
-}
-
-async function showMovieDetails(movie){
-    
-    // Titre
-    
-
-    // Image
-    
-    
-    // Liste
-    let list = document.getElementById("infos-list");
-
-    list.innerHTML = "";
-
-    showList(movie.genres,"Genres :", list);
-
-    let date = document.createElement('li');
-    date.innerText = `Date de sortie : ${movie.year}`;
-    list.appendChild(date);
-
-    let rated = document.createElement('li');
-    rated.innerText = `Rated : ${movie.rated}`;
-    list.appendChild(rated);
-
-    let imdbScore = document.createElement('li');
-    imdbScore.innerText = `Score imdb : ${movie.imdb_score}`;
-    list.appendChild(imdbScore);
-
-    /*
-    const director = document.createElement('li');
-    director.innerText = `Réalisateur : ${movie.directors}`;
-    list.appendChild(director);
-    */
-    showList(movie.directors, movie.directors.length == 1 ? "Réalisateur :" : "Réalisateurs : ", list)
-    /*
-    const actors = document.createElement('li');
-    const actorsList = document.createElement('ul');
-    for(let actor of movie.actors){
-        const actorElement = document.createElement('li');
-        actorElement.innerText = actor;
-        actorsList.appendChild(actorElement);
-    }
-    actors.innerText = "Acteurs : "
-    actors.appendChild(actorsList);
-    list.appendChild(actors);
-    */
-    
-    showList(movie.actors,movie.actors.length == 1 ? "Acteur :" : "Acteurs : ", list);
-    const duration = document.createElement('li');
-    duration.innerText = `Durée : ${movie.duration}`;
-    list.appendChild(duration);
-
-    /*
-    const country = document.createElement('li');
-    country.innerText = `Pays : ${movie.countries}`;
-    list.appendChild(country);
-    */
-
-    showList(movie.countries, "Pays : ", list);
-    const worldwideGrossIncome = document.createElement('li');
-    worldwideGrossIncome.innerText = `Box-office : ${movie.worldwide_gross_income}`;
-    list.appendChild(worldwideGrossIncome);
-
-    const description = document.createElement('li');
-    description.innerText = `Résumé : ${movie.long_description}`;
-    list.appendChild(description);
-
-    // Récupération de l'élément dans lequel ajouter les éléments créer
-    const imageRow = document.getElementById("movie-picture");
-    imageRow.appendChild(img);
-    const detailsRow = document.getElementsByClassName("modal-body")[0];
-    //detailsRow.innerHTML="" //Ici
-    detailsRow.appendChild(list);
-    // Ajouter les éléments créer
-    
 }
 
 function openModal() {
