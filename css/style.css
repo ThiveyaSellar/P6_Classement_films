@@ -36,7 +36,7 @@ ul {
     /*list-style-type: none;  Remove bullets */
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 10px;
 }
 
 .logo{
@@ -86,7 +86,7 @@ a{
 #movie-picture{
     display: flex;
     justify-content: center;
-    padding: 50px;
+    padding: 15px 50px;
 }
 
 .modal-body{
@@ -207,6 +207,6 @@ button img{
 }
 
 #movie-picture img {
-    height: 500px;
+    height: 250px;
 }
 
