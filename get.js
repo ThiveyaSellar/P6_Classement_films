@@ -159,7 +159,9 @@ function manageCarouselImages(movies, numberOfMovies, carouselDiv){
     for(let i=0;i<numberOfMovies; i++){
         const image = createCarouselImg(movies[i]);
         image.addEventListener("click",function(){
-        console.log("test")
+            let movieId = movies[i].id
+            setModal(movieId)
+            openModal()
         })
         if (i >= config.numberOfMoviesPerSlide) {
             image.style.display = "none"
@@ -291,11 +293,14 @@ function setModalHeaderMovieTitle(title){
 }
 
 function createModalMoviePicture(source, title){
-    //const modalImage = document.getElementsByClassName('modalImg')[0];
+    const pictureDiv = document.createElement('div');
+    pictureDiv.id = "movie-picture";
     const modalImage = document.createElement('img');
     modalImage.src = source;
     modalImage.alt = title;
-    document.getElementById("movie-picture").appendChild(modalImage)
+    pictureDiv.appendChild(modalImage);
+
+    return pictureDiv;
 }
 
 function createListItem(itemName, itemContent){
@@ -318,7 +323,7 @@ function setModalMovieList(modalBody,movieDetails){
         ["Score Imdb", movieDetails.imdb_score],
         ["Réalisateur", movieDetails.directors],
         ["Acteurs", movieDetails.actors],
-        ["Durée", movieDetails.duration],
+        ["Durée", `${movieDetails.duration} min`],
         ["Pays d'origine", movieDetails.countries],
         ["Box-office", movieDetails.worldwide_gross_income],
         ["Résumé", movieDetails.long_description]
@@ -332,6 +337,10 @@ function setModalMovieList(modalBody,movieDetails){
             itemContent = itemContent.join(', ')
         }
 
+        if(itemContent === null){
+            itemContent = "Inconnu";
+        }
+
         var item = createListItem(itemName, itemContent)
         ulElement.appendChild(item)
     }
@@ -341,7 +350,8 @@ function setModalMovieList(modalBody,movieDetails){
 
 async function setMovieDetails(modalBody, movieDetails){
     setModalHeaderMovieTitle(movieDetails.title)
-    createModalMoviePicture(movieDetails.image_url, movieDetails.title)
+    const moviePicture = createModalMoviePicture(movieDetails.image_url, movieDetails.title)
+    modalBody.appendChild(moviePicture)
     setModalMovieList(modalBody, movieDetails)
 }
 
@@ -421,6 +431,11 @@ async function showMovieDetails(movie){
     
 }
 
+function openModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+}
+
 async function setModal(movieId){
 
     // Get the modal
@@ -438,14 +453,18 @@ async function setModal(movieId){
     const movieDetails = await fetchData(url)
 
     // Set movie details
+    modalBody.innerHTML = ""
     setMovieDetails(modalBody, movieDetails)
 
     // When the user clicks on the button, open the modal
-    function openModal() {
-        modal.style.display = "block";
-    }
+
 
     btn.addEventListener("click", openModal);
+
+
+    /*btn.onclick = function() {
+        modal.style.display = "block";
+    }*/
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
