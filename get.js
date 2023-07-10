@@ -198,8 +198,6 @@ function createCarousel(movies, sectionId, category){
 
     manageCarouselImages(movies, config["numberOfMovies"], carouselDiv);
 
-    // Ajouter la section au document
-    // document.body.appendChild(carouselSection)
     mainElement.appendChild(carouselSection)
 }
 
@@ -224,25 +222,7 @@ async function fetchAndCreateCarousel(url, sectionId, category){
 // --------------------------------------------------------------
 
 function main(config) {
-    // Première section : afficher le meilleur film
-    // Deuxième section : afficher les caroussels selon les catégories
 
-    // HTML pur
-    /*
-    const carouselSection = document.getElementById('html-pur');
-    const leftBtn = carouselSection.getElementsByClassName('leftBtn')[0];
-    const rightBtn = carouselSection.getElementsByClassName('rightBtn')[0];
-
-    leftBtn.addEventListener('click', function(){
-        leftArrow(carouselSection);
-    });
-
-    rightBtn.addEventListener('click', function(){
-        rightArrow(carouselSection);
-    });
-    */
-
-    
     const baseUrl = `http://127.0.0.1:8000/api/v1/titles/?page_size=${config.numberOfMovies}&sort_by=-imdb_score`;
     const url = baseUrl;    
     const urlHistory = `${baseUrl}&genre=history`;    
@@ -266,25 +246,6 @@ function main(config) {
     console.error(error);
     });
     
-
-}
-
-
-
-
-
-
-function showList(movieElements, title, list){
-    const elements = document.createElement('li');
-    const elementList = document.createElement('ul');
-    for(let element of movieElements){
-        const elementElement = document.createElement('li');
-        elementElement.innerText = element;
-        elementList.appendChild(elementElement);
-    }
-    elements.innerText = title;
-    elements.appendChild(elementList);
-    list.appendChild(elements);
 }
 
 function setModalHeaderMovieTitle(title){
@@ -355,82 +316,6 @@ async function setMovieDetails(modalBody, movieDetails){
     setModalMovieList(modalBody, movieDetails)
 }
 
-async function showMovieDetails(movie){
-    
-    // Titre
-    
-
-    // Image
-    
-    
-    // Liste
-    let list = document.getElementById("infos-list");
-
-    list.innerHTML = "";
-
-    showList(movie.genres,"Genres :", list);
-
-    let date = document.createElement('li');
-    date.innerText = `Date de sortie : ${movie.year}`;
-    list.appendChild(date);
-
-    let rated = document.createElement('li');
-    rated.innerText = `Rated : ${movie.rated}`;
-    list.appendChild(rated);
-
-    let imdbScore = document.createElement('li');
-    imdbScore.innerText = `Score imdb : ${movie.imdb_score}`;
-    list.appendChild(imdbScore);
-
-    /*
-    const director = document.createElement('li');
-    director.innerText = `Réalisateur : ${movie.directors}`;
-    list.appendChild(director);
-    */
-    showList(movie.directors, movie.directors.length == 1 ? "Réalisateur :" : "Réalisateurs : ", list)
-    /*
-    const actors = document.createElement('li');
-    const actorsList = document.createElement('ul');
-    for(let actor of movie.actors){
-        const actorElement = document.createElement('li');
-        actorElement.innerText = actor;
-        actorsList.appendChild(actorElement);
-    }
-    actors.innerText = "Acteurs : "
-    actors.appendChild(actorsList);
-    list.appendChild(actors);
-    */
-    
-    showList(movie.actors,movie.actors.length == 1 ? "Acteur :" : "Acteurs : ", list);
-    const duration = document.createElement('li');
-    duration.innerText = `Durée : ${movie.duration}`;
-    list.appendChild(duration);
-
-    /*
-    const country = document.createElement('li');
-    country.innerText = `Pays : ${movie.countries}`;
-    list.appendChild(country);
-    */
-
-    showList(movie.countries, "Pays : ", list);
-    const worldwideGrossIncome = document.createElement('li');
-    worldwideGrossIncome.innerText = `Box-office : ${movie.worldwide_gross_income}`;
-    list.appendChild(worldwideGrossIncome);
-
-    const description = document.createElement('li');
-    description.innerText = `Résumé : ${movie.long_description}`;
-    list.appendChild(description);
-
-    // Récupération de l'élément dans lequel ajouter les éléments créer
-    const imageRow = document.getElementById("movie-picture");
-    imageRow.appendChild(img);
-    const detailsRow = document.getElementsByClassName("modal-body")[0];
-    //detailsRow.innerHTML="" //Ici
-    detailsRow.appendChild(list);
-    // Ajouter les éléments créer
-    
-}
-
 function openModal() {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
@@ -457,14 +342,8 @@ async function setModal(movieId){
     setMovieDetails(modalBody, movieDetails)
 
     // When the user clicks on the button, open the modal
-
-
     btn.addEventListener("click", openModal);
 
-
-    /*btn.onclick = function() {
-        modal.style.display = "block";
-    }*/
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
@@ -478,10 +357,6 @@ async function setModal(movieId){
         }
     }
 }
-
-
-
-
 
 
 main(config)
