@@ -322,7 +322,6 @@ function openModal() {
 }
 
 async function setModal(movieId){
-
     // Get the modal
     var modal = document.getElementById("myModal");
     var modalBody = modal.getElementsByClassName("modal-body")[0]
@@ -341,9 +340,8 @@ async function setModal(movieId){
     modalBody.innerHTML = ""
     setMovieDetails(modalBody, movieDetails)
 
-    // When the user clicks on the button, open the modal
-    btn.addEventListener("click", openModal);
-
+    // Open the modal
+    openModal()
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
