@@ -8,34 +8,22 @@ const config = {
 	// Le meilleur film
 
 // --------------------------------------------------------------
-function createBestMovieSection(){
-    const bestMovieSection = document.createElement('section');
-    bestMovieSection.id = 'best-movie';
-    return bestMovieSection;   
+function createBestMovieElement(element, id){
+    const bestMovieElement = document.createElement(element);
+    bestMovieElement.id = id;
+    return bestMovieElement;
 }
 
-function createBestMovieInfosDiv(){
-    const bestMovieInfosDiv = document.createElement('div');
-    bestMovieInfosDiv.id = 'best-movie-infos';
-    return bestMovieInfosDiv;
-}
-
-function createTitle(title){
-    const titleElement = document.createElement('h1');
-    titleElement.innerText = title
-    return titleElement;
-}
-
-function createText(text){
-    const textElement = document.createElement('p');
+function createTextElement(element, text){
+    const textElement = document.createElement(element);
     textElement.innerText = text;
     return textElement;
 }
 
-function createButton(txt){
+function createButton(text){
     const buttonElement = document.createElement('button');
     buttonElement.id = "myBtn";
-    buttonElement.innerText=txt;
+    buttonElement.innerText=text;
     return buttonElement;
 }
 
@@ -50,15 +38,15 @@ async function getBestMovie(){
     const movies = await fetchData("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score")
     const bestMovie = await fetchData(movies.results[0].url)
 
-    const bestMovieSection = createBestMovieSection();
-    const bestMovieInfosDiv = createBestMovieInfosDiv();
+    const bestMovieSection = createBestMovieElement('section', 'best-movie');
+    const bestMovieInfosDiv = createBestMovieElement('div', 'best-movie-infos');
 
-    const title = createTitle(bestMovie.title);
+    const title = createTextElement('h1', bestMovie.title);
     bestMovieInfosDiv.appendChild(title);
 
     const movieDetails = await fetchData(bestMovie.url);
 
-    const movieDescription = createText(movieDetails.long_description)
+    const movieDescription = createTextElement('p', movieDetails.long_description)
     bestMovieInfosDiv.appendChild(movieDescription);
 
     const moreDetailsBtn = createButton("Plus d'informations"); 
@@ -129,7 +117,7 @@ async function fetchData(url){
 function createCarouselSection(sectionId, category) {
     const carouselSection = document.createElement('section');
     carouselSection.id = sectionId;
-    const title = createTitle(category);
+    const title = createTextElement('h1', category);
     title.classList.add('category');
     carouselSection.appendChild(title);
     return carouselSection;
