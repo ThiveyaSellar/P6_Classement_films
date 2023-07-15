@@ -20,10 +20,10 @@ function createTextElement(element, text){
     return textElement;
 }
 
-function createButton(text){
+function createButton(text, id){
     const buttonElement = document.createElement('button');
-    buttonElement.id = "myBtn";
-    buttonElement.innerText=text;
+    buttonElement.id = id;
+    buttonElement.innerText = text;
     return buttonElement;
 }
 
@@ -35,8 +35,9 @@ function createImage(url, title){
 }
 
 async function getBestMovie(){
-    const movies = await fetchData("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score")
-    const bestMovie = await fetchData(movies.results[0].url)
+    // Url avec tri par ordre décroissant pour les scores imdb : premier élément -> meilleur film
+    const movies = await fetchData("http://127.0.0.1:8000/api/v1/titles/?sort_by=-imdb_score");
+    const bestMovie = await fetchData(movies.results[0].url);
 
     const bestMovieSection = createBestMovieElement('section', 'best-movie');
     const bestMovieInfosDiv = createBestMovieElement('div', 'best-movie-infos');
@@ -44,19 +45,17 @@ async function getBestMovie(){
     const title = createTextElement('h1', bestMovie.title);
     bestMovieInfosDiv.appendChild(title);
 
-    const movieDetails = await fetchData(bestMovie.url);
-
-    const movieDescription = createTextElement('p', movieDetails.long_description)
+    const movieDescription = createTextElement('p', bestMovie.long_description);
     bestMovieInfosDiv.appendChild(movieDescription);
 
-    const moreDetailsBtn = createButton("Plus d'informations"); 
+    const moreDetailsBtn = createButton("Plus d'informations", "myBtn"); 
     moreDetailsBtn.addEventListener("click",function(){
-        const movieId = bestMovie.id
-        setModal(movieId)
+        const movieId = bestMovie.id;
+        setModal(movieId);
     })
     bestMovieInfosDiv.appendChild(moreDetailsBtn);
 
-    const image = createImage(bestMovie.image_url, bestMovie.title)
+    const image = createImage(bestMovie.image_url, bestMovie.title);
     
     bestMovieSection.appendChild(bestMovieInfosDiv);
     bestMovieSection.appendChild(image);
@@ -73,13 +72,13 @@ async function getBestMovie(){
 // --------------------------------------------------------------
 
 function update_carousel(section){   
-    let movies_images = [...section.getElementsByClassName('carousel')[0].children]
+    let movies_images = [...section.getElementsByClassName('carousel')[0].children];
    
     movies_images.forEach((element, index)=>{
         if( index < config.numberOfMoviesPerSlide){
-            element.style.display = 'block'
+            element.style.display = 'block';
         }else{
-            element.style.display = 'none' 
+            element.style.display = 'none'; 
         }
     })
 }
@@ -89,7 +88,7 @@ function rightArrow(section){
     carousel.append(carousel.children.item(0));
     // Récupérer les éléments du carousel dans un tableau
     let images = carousel.getElementsByTagName('img');
-    update_carousel(section)
+    update_carousel(section);
 }
 
 function leftArrow(section){  
@@ -97,7 +96,7 @@ function leftArrow(section){
     carousel.prepend(carousel.children.item(carousel.children.length - 1));
     // Récupérer les éléments du caroussel dans un tableau
     let images = carousel.getElementsByTagName('img');
-    update_carousel(section)
+    update_carousel(section);
 }
 
 
@@ -110,9 +109,8 @@ function leftArrow(section){
 async function fetchData(url){
     const response = await fetch(url);
     const movies = await response.json();
-    return movies
+    return movies;
 }
-
 
 function createCarouselSection(sectionId, category) {
     const carouselSection = document.createElement('section');
@@ -126,7 +124,6 @@ function createCarouselSection(sectionId, category) {
 function getArrow(direction) {
     const btn = document.createElement('button');
     btn.classList.add(direction + 'Btn');
-    // Créer l'image de la flèche de gauche
     const arrowImg = document.createElement('img');
     arrowImg.src = "img/"+direction+"-arrow.png";
     arrowImg.alt = direction + " arrow";
@@ -142,19 +139,19 @@ function createCarouselDiv() {
     return carouselDiv;
 }
 
-function manageCarouselImages(movies, numberOfMovies, carouselDiv){
+function manageCarouselImages(movies, carouselDiv){
     // Ajouter les images à la div du carousel
-    for(let i=0;i<numberOfMovies; i++){
+    for(let i=0;i<config.numberOfMovies; i++){
         const image = createCarouselImg(movies[i]);
         image.addEventListener("click",function(){
-            let movieId = movies[i].id
-            setModal(movieId)
-            openModal()
+            let movieId = movies[i].id;
+            setModal(movieId);
+            openModal();
         })
         if (i >= config.numberOfMoviesPerSlide) {
-            image.style.display = "none"
+            image.style.display = "none";
         }
-        carouselDiv.appendChild(image)
+        carouselDiv.appendChild(image);
     }
 }
 
@@ -182,25 +179,25 @@ function createCarousel(movies, sectionId, category){
     carouselElementsDiv.appendChild(carouselDiv);
     carouselElementsDiv.appendChild(rightBtn);
 
-    carouselSection.appendChild(carouselElementsDiv)
+    carouselSection.appendChild(carouselElementsDiv);
 
-    manageCarouselImages(movies, config["numberOfMovies"], carouselDiv);
+    manageCarouselImages(movies, carouselDiv);
 
-    mainElement.appendChild(carouselSection)
+    mainElement.appendChild(carouselSection);
 }
 
 function createCarouselImg(movie) {
-    const imageUrl = movie.image_url
-    const image = document.createElement('img')
-    image.alt = movie.title
-    image.src = imageUrl
+    const imageUrl = movie.image_url;
+    const image = document.createElement('img');
+    image.alt = movie.title;
+    image.src = imageUrl;
     
     return image;
 }
 
 async function fetchAndCreateCarousel(url, sectionId, category){
-    const movies = await fetchData(url)
-    createCarousel(movies.results, sectionId, category) 
+    const movies = await fetchData(url);
+    createCarousel(movies.results, sectionId, category);
 }
 
 // --------------------------------------------------------------
@@ -238,7 +235,7 @@ function main(config) {
 
 function setModalHeaderMovieTitle(title){
     const modalTitle = document.getElementById("modalTitle");
-    modalTitle.innerText = title
+    modalTitle.innerText = title;
 }
 
 function createModalMoviePicture(source, title){
@@ -262,8 +259,6 @@ function setModalMovieList(modalBody,movieDetails){
 
     const ulElement = document.createElement('ul');
 
-    // Si données multiples écrire sur une ligne
-
     const items = [
         ["Titre", movieDetails.title],
         ["Genres", movieDetails.genres],
@@ -276,32 +271,32 @@ function setModalMovieList(modalBody,movieDetails){
         ["Pays d'origine", movieDetails.countries],
         ["Box-office", movieDetails.worldwide_gross_income],
         ["Résumé", movieDetails.long_description]
-    ]
+    ];
 
     for(let i=0; i < items.length; i++){
         let itemName = items[i][0];
         let itemContent = items[i][1];
 
         if(typeof(itemContent) === "object" && itemContent !== null){
-            itemContent = itemContent.join(', ')
+            itemContent = itemContent.join(', ');
         }
 
         if(itemContent === null){
             itemContent = "Inconnu";
         }
 
-        var item = createListItem(itemName, itemContent)
-        ulElement.appendChild(item)
+        var item = createListItem(itemName, itemContent);
+        ulElement.appendChild(item);
     }
 
     modalBody.appendChild(ulElement);
 }
 
 async function setMovieDetails(modalBody, movieDetails){
-    setModalHeaderMovieTitle(movieDetails.title)
-    const moviePicture = createModalMoviePicture(movieDetails.image_url, movieDetails.title)
-    modalBody.appendChild(moviePicture)
-    setModalMovieList(modalBody, movieDetails)
+    setModalHeaderMovieTitle(movieDetails.title);
+    const moviePicture = createModalMoviePicture(movieDetails.image_url, movieDetails.title);
+    modalBody.appendChild(moviePicture);
+    setModalMovieList(modalBody, movieDetails);
 }
 
 function openModal() {
@@ -322,14 +317,14 @@ async function setModal(movieId){
 
     // Get movie details 
     const url = `http://127.0.0.1:8000/api/v1/titles/${movieId}`
-    const movieDetails = await fetchData(url)
+    const movieDetails = await fetchData(url);
 
     // Set movie details
-    modalBody.innerHTML = ""
-    setMovieDetails(modalBody, movieDetails)
+    modalBody.innerHTML = "";
+    setMovieDetails(modalBody, movieDetails);
 
     // Open the modal
-    openModal()
+    openModal();
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
@@ -345,5 +340,5 @@ async function setModal(movieId){
 }
 
 
-main(config)
+main(config);
 
