@@ -56,6 +56,10 @@ async function getBestMovie(){
     bestMovieInfosDiv.appendChild(moreDetailsBtn);
 
     const image = createImage(bestMovie.image_url, bestMovie.title);
+    image.addEventListener("click",function(){
+        const movieId = bestMovie.id;
+        setModal(movieId);
+    })
     
     bestMovieSection.appendChild(bestMovieInfosDiv);
     bestMovieSection.appendChild(image);
