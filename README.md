@@ -21,8 +21,10 @@ The JustStreamIt association wants a web application to enable its subscribers t
 
 ### API Server
 
+Once downloaded :
+
 ```bash
-# Activate a virtual environnement
+# Activate the virtual environnement
 ## Linux
 source env/bin/activate
 ## Windows
